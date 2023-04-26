@@ -25,6 +25,7 @@ dependencies:
   - bokeh
   - seaborn
   - zarr
+  - pip=22.1.2
   - pip:
       - Jinja2
       - cvxpylayers
@@ -33,5 +34,9 @@ dependencies:
       - transforms3d
       - rosbags
       - tbparse
+      - loguru
+      - setproctitle
+      - mmcv-full
+      - pytorch-lightning==1.6.5
       - git+https://github.com/jingnanshi/bullet3.git
       - git+https://github.com/facebookresearch/detectron2.git
