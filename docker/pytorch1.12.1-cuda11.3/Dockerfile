@@ -45,7 +45,7 @@ RUN sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
 RUN sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6 freeglut3 freeglut3-dev -y
 
 # C++ libaries and tools
-RUN sudo apt-get update && sudo apt-get install cmake libeigen3-dev pv pigz -y
+RUN sudo apt-get update && sudo apt-get install cmake libeigen3-dev pv pigz llvm autoconf zlib1g-dev -y
 
 # Set up additional packages
 COPY environment.yml /app/environment.yml
