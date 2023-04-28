@@ -45,7 +45,7 @@ RUN sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
 RUN sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6 freeglut3 freeglut3-dev -y
 
 # C++ libaries and tools
-RUN sudo apt-get update && sudo apt-get install cmake libeigen3-dev pv pigz llvm autoconf zlib1g-dev -y
+RUN sudo apt-get update && sudo apt-get install cmake libeigen3-dev pv pigz llvm-6.0 autoconf zlib1g-dev -y
 
 # Set up additional packages
 COPY environment.yml /app/environment.yml
@@ -56,6 +56,12 @@ RUN mamba env update -n base -f /app/environment.yml \
 # setup work directory for project
 RUN mkdir /opt/project
 WORKDIR /opt/project
+
+# Install BOP renderer
+RUN sudo chmod -R 777 /opt
+ENV OSMESA_PREFIX=/opt/osmesa LLVM_PREFIX=/lib/llvm-6.0 LLVM_BUILD=0 LLVM_VERSION=6.0.1
+RUN git clone git@github.com:jingnanshi/bop_renderer.git && mkdir bop_renderer/osmesa-install/build \
+    && cd bop_renderer/osmesa-install/build && bash ../osmesa-install.sh
 
 # Activate mamba base environment by default
 RUN mamba init
