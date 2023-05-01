@@ -45,7 +45,7 @@ RUN sudo ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
 RUN sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6 freeglut3 freeglut3-dev -y
 
 # C++ libaries and tools
-RUN sudo apt-get update && sudo apt-get install cmake libeigen3-dev pv pigz llvm-6.0 autoconf zlib1g-dev -y
+RUN sudo apt-get update && sudo apt-get install cmake libeigen3-dev pv pigz llvm-6.0 autoconf zlib1g-dev libexpat1-dev -y
 
 # Set up additional packages
 COPY environment.yml /app/environment.yml
@@ -59,9 +59,14 @@ WORKDIR /opt/project
 
 # Install BOP renderer
 RUN sudo chmod -R 777 /opt
-ENV OSMESA_PREFIX=/opt/osmesa LLVM_PREFIX=/lib/llvm-6.0 LLVM_BUILD=0 LLVM_VERSION=6.0.1
-RUN git clone git@github.com:jingnanshi/bop_renderer.git && mkdir bop_renderer/osmesa-install/build \
-    && cd bop_renderer/osmesa-install/build && bash ../osmesa-install.sh
+ENV OSMESA_PREFIX=/opt/osmesa LLVM_PREFIX=/lib/llvm-6.0 LLVM_BUILD=0 LLVM_VERSION=6.0.1 MANGLED=0 SHARED=1 BUILD_OSDEMO=0
+# OSMesa install
+RUN git clone https://github.com/devernay/osmesa-install.git && mkdir osmesa-install/build \
+    && cd osmesa-install/build  \
+    && mkdir /opt/osmesa \
+    && bash ../osmesa-install.sh
+RUN git clone https://github.com/jingnanshi/bop_renderer.git && cd bop_renderer && mkdir build && cd build \
+    && cmake .. -DCMAKE_BUILD_TYPE=Release && make
 
 # Activate mamba base environment by default
 RUN mamba init
