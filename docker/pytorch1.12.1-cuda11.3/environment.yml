@@ -27,6 +27,7 @@ dependencies:
   - zarr
   - pip=22.1.2
   - vispy
+  - fastcore
   - pip:
       - Jinja2
       - cvxpylayers
@@ -48,3 +49,6 @@ dependencies:
       - meshplex
       - git+https://github.com/jingnanshi/bullet3.git
       - git+https://github.com/facebookresearch/detectron2.git
+      - gin-config
+      - colored_traceback
+      - git+https://github.com/princeton-vl/lietorch.git
