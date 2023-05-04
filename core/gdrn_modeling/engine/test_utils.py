@@ -37,6 +37,7 @@ def save_and_eval_results(cfg, results_all, output_dir, obj_ids=None):
     header = "scene_id,im_id,obj_id,score,R,t,time"
     keys = header.split(",")
     result_names = []
+    breakpoint()
     for name, result_list in results_all.items():
         method_name = f"{cfg.EXP_ID.replace('_', '-')}-{name}"
         result_name = f"{method_name}_{cfg.VAL.DATASET_NAME}-{cfg.VAL.SPLIT}{split_type_str}.csv"
@@ -52,24 +53,29 @@ def save_and_eval_results(cfg, results_all, output_dir, obj_ids=None):
         logger.info("wrote results to: {}".format(res_path))
 
     if not cfg.VAL.SAVE_BOP_CSV_ONLY:
-        result_names_str = ",".join(result_names)
-        eval_cmd = [
-            "python",
-            cfg.VAL.SCRIPT_PATH,
-            "--results_path={}".format(save_root),
-            "--result_filenames={}".format(result_names_str),
-            "--renderer_type={}".format(cfg.VAL.RENDERER_TYPE),
-            "--error_types={}".format(cfg.VAL.ERROR_TYPES),
-            "--eval_path={}".format(save_root),
-            "--targets_filename={}".format(cfg.VAL.TARGETS_FILENAME),
-            "--n_top={}".format(cfg.VAL.N_TOP),
-        ]
-        if cfg.VAL.SCORE_ONLY:
-            eval_cmd += ["--score_only"]
-        eval_time = time.perf_counter()
-        if subprocess.call(eval_cmd) != 0:
-            logger.warning("evaluation failed.")
+        breakpoint()
+        #result_names_str = ",".join(result_names)
+        #eval_cmd = [
+        #    "python",
+        #    cfg.VAL.SCRIPT_PATH,
+        #    "--results_path={}".format(save_root),
+        #    "--result_filenames={}".format(result_names_str),
+        #    "--renderer_type={}".format(cfg.VAL.RENDERER_TYPE),
+        #    "--error_types={}".format(cfg.VAL.ERROR_TYPES),
+        #    "--eval_path={}".format(save_root),
+        #    "--targets_filename={}".format(cfg.VAL.TARGETS_FILENAME),
+        #    "--n_top={}".format(cfg.VAL.N_TOP),
+        #]
+        #if cfg.VAL.SCORE_ONLY:
+        #    eval_cmd += ["--score_only"]
+        #eval_time = time.perf_counter()
+        #if subprocess.call(eval_cmd) != 0:
+        #    logger.warning("evaluation failed.")
 
+        breakpoint()
+        # HACK:
+        save_root="./output/my_evaluation_ycbv_fast/challenge2020-262039688_ycbv-test"
+        result_names=['challenge2020-262039688_ycbv-test.csv']
         load_and_print_val_scores_tab(
             cfg,
             eval_root=save_root,
@@ -162,7 +168,7 @@ def get_thr(score_path):
     # scores_th:2.000_min-visib:0.100.json
     # rete: scores_th:10.000-10.000_min-visib:-1.000.json
     # NOTE: assume the same threshold (currently can deal with rete, rete_s)
-    return float(score_path.split("/")[-1].replace("scores_th:", "").split("_")[0].split("-")[0])
+    return float(score_path.split("/")[-1].replace("scores_th:", "").replace("scores_th=", "").split("_")[0].split("-")[0])
 
 
 def simplify_float_str(float_str):
@@ -176,7 +182,8 @@ def get_thr_str(score_path):
     # path/to/scores_th:2.000_min-visib:0.100.json  --> 2
     # rete: path/to/scores_th:10.000-10.000_min-visib:-1.000.json --> 10
     thr_str = score_path.split("/")[-1].split("_")[1]
-    thr_str = thr_str.split(":")[-1]
+    #thr_str = thr_str.split(":")[-1]
+    thr_str = thr_str.split("=")[-1]
     if "-" in thr_str:
         thr_str_split = thr_str.split("-")
         simple_str_list = [simplify_float_str(_thr) for _thr in thr_str_split]
@@ -422,6 +429,7 @@ def load_and_print_val_scores_tab(
                     logger.warning("{} does not exist.".format(score_root))
                     raise RuntimeError("{} does not exist.".format(score_root))
 
+        breakpoint()
         if len(big_tab_row) > 0:
             # row: obj in row
             # col: obj in col
